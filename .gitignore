@@ -1,0 +1,7 @@
+/**/.idea/**
+*.iml
+/META-INF/
+*Thumbs.db
+/**/.tmp/**
+# ...even if they are in subdirectories
+!*/
