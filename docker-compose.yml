@@ -43,10 +43,7 @@ services:
 
   kafka01:
     container_name: kafka01
-    build:
-      args:
-        - KEYSTORE_LOCATION=./ssl/server.keystore.jks
-        - TRUSTSTORE_LOCATION=./ssl/server.truststore.jks
+    build: 
       context: ./kafka
       dockerfile: ./kafka.dockerfile
     # volumes:
@@ -57,13 +54,14 @@ services:
       - BROKERS_PASS=zoopass
       - CLIENT_USER=zoouser
       - CLIENT_PASS=zoopass
-      - SSL_KEYSTORE_PASSWORD=sslpass
-      - SSL_TRUSTSTORE_PASSWORD=sslpass
       - ZOOKEEPER_CONNECT=zookeeper:2181
       - AUTOCREATE_TOPICS=true
       - LISTENERS=SASL_SSL://kafka01:9092
       - ADVERTISED_LISTENERS=SASL_SSL://kafka01:9092
-      - NUM_OF_PARTITIONS=1
+      - NUM_OF_PARTITIONS=1 
+      - SSL_STOREPASS=sslpass
+      - SSL_KEYTOOL_SAN=SAN=DNS:localhost,DNS:kafka01
+
     ports:
       - '9092:9092'
     networks:

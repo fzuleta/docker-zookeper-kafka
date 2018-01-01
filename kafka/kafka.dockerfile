@@ -20,9 +20,6 @@
 
 FROM openjdk:latest
 
-ARG TRUSTSTORE_LOCATION
-ARG KEYSTORE_LOCATION
-
 ENV SCALA_VERSION=2.11
 ENV KAFKA_VERSION=1.0.0
 ENV KAFKA_HOME /opt/kafka
@@ -31,18 +28,15 @@ ENV KAFKA_HOME /opt/kafka
 # to speed up you can download from http://apache.uvigo.es/kafka/1.0.0/kafka_2.11-1.0.0.tgz
 # and place the folder inside the tar folder, also comment the wget on the next part.
 
-# COPY tar/kafka.tar.gz /opt/
+COPY tar/kafka.tar.gz /opt/
 
 RUN cd /opt && \
-    wget http://apache.uvigo.es/kafka/1.0.0/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz -O kafka.tar.gz && \
+    # wget http://apache.uvigo.es/kafka/$KAFKA_VERSION/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz -O kafka.tar.gz && \
     tar -xf kafka.tar.gz && \
     rm kafka.tar.gz && \
     mv /opt/kafka_$SCALA_VERSION-$KAFKA_VERSION /opt/kafka
 
 ADD entrypoint.sh /opt/entrypoint.sh
-
-ADD $KEYSTORE_LOCATION /opt/ssl/keystore
-ADD $TRUSTSTORE_LOCATION /opt/ssl/truststore
 
 RUN chmod +x /opt/entrypoint.sh
 

@@ -32,10 +32,10 @@ ADD entrypoint.sh /opt/entrypoint.sh
 # -----
 # to speed up you can download from http://apache.uniminuto.edu/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz
 # and place the folder inside the tar folder, also comment the wget on the next part.
-# COPY tar/zookeeper.tar.gz /opt/
+COPY tar/zookeeper.tar.gz /opt/
 
 RUN cd /opt && \
-    wget http://apache.uniminuto.edu/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz -O zookeeper.tar.gz && \
+    # wget http://apache.uniminuto.edu/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz -O zookeeper.tar.gz && \
     tar -xf zookeeper.tar.gz && \
     rm zookeeper.tar.gz && \
     mv /opt/zookeeper-$ZOOKEEPER_VERSION /opt/zookeeper && \
