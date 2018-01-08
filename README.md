@@ -2,7 +2,7 @@
 An example of running kafka (scalable to many kafkas) with zookeeper using docker, using enforced ssl and sasl.
 
 ## A note on ssl
-do run ./createssl.sh to create new ssl certificates.
+do run ./createssl.sh to create new ssl certificates. note that the consumer and the server use the same keystore since it's been signed by a custom CA.
 
 ## To run the broker (zookeeper-kafka server):
 1. docker-compose up
