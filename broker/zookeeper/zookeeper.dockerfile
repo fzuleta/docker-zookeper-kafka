@@ -20,26 +20,29 @@
 
 FROM openjdk:latest
 
-ENV SCALA_VERSION=2.11
-ENV KAFKA_VERSION=1.0.0
-ENV KAFKA_HOME /opt/kafka
+ARG ZOO_VERSION=3.4.11
+RUN mkdir /opt/zookeeper-data &&\
+    cd /
+
+ENV ZOOKEEPER_VERSION=3.4.11
+ENV ZOOKEEPER_HOME /opt/zookeeper
+
+ADD broker/zookeeper/entrypoint.sh /opt/entrypoint.sh
 
 # -----
-# to speed up you can download from http://apache.uvigo.es/kafka/1.0.0/kafka_2.11-1.0.0.tgz
+# to speed up you can download from http://apache.uniminuto.edu/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz
 # and place the folder inside the tar folder, also comment the wget on the next part.
-
-COPY tar/kafka.tar.gz /opt/
+# COPY tar/zookeeper.tar.gz /opt/
 
 RUN cd /opt && \
-    # wget http://apache.uvigo.es/kafka/$KAFKA_VERSION/kafka_$SCALA_VERSION-$KAFKA_VERSION.tgz -O kafka.tar.gz && \
-    tar -xf kafka.tar.gz && \
-    rm kafka.tar.gz && \
-    mv /opt/kafka_$SCALA_VERSION-$KAFKA_VERSION /opt/kafka
+    wget http://apache.uniminuto.edu/zookeeper/zookeeper-3.4.11/zookeeper-3.4.11.tar.gz -O zookeeper.tar.gz && \
+    tar -xf zookeeper.tar.gz && \
+    rm zookeeper.tar.gz && \
+    mv /opt/zookeeper-$ZOOKEEPER_VERSION /opt/zookeeper && \
+    chmod +x /opt/entrypoint.sh
 
-ADD entrypoint.sh /opt/entrypoint.sh
+VOLUME ["/opt/zookeeper-data"]
 
-RUN chmod +x /opt/entrypoint.sh
-
-EXPOSE 9092 9093
+EXPOSE 2181 2888 3888
 
 CMD ["/opt/entrypoint.sh"]

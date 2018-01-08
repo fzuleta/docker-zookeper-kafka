@@ -2,7 +2,16 @@
 An example of running kafka (scalable to many kafkas) with zookeeper using docker, using enforced ssl and sasl.
 
 ## A note on ssl
-Kafka container's entrypoint, will create it's own set of self-signed certificates, on docker-compose you can change the password.
-(it's convenient, but be sure to study your requirements)
+do run ./createssl.sh to create new ssl certificates.
+
+## To run the broker (zookeeper-kafka server):
+1. docker-compose up
+
+## To run the consumer
+1. check the file `src/test/kotlin/kafka/kafkaTests.kt`
+2. you can run it from intelliJ (make sure the broker is running) 
+
+### Docker note:
+note the tests have the bootstrap servers as **localhost** but the docker container name is kafka01, they are connected via the port being exposed to the host. if creating a container using a jar file, make sure to use the container name.
 
 ### This can be improved, this is the first working version I got using SASL_SSL and scalabla kafka brokers. feel free to work on this as well (actually that'd be great.)

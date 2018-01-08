@@ -24,8 +24,8 @@ services:
   zookeeper:
     container_name: zookeeper
     build:
-      context: ./zookeeper
-      dockerfile: ./zookeeper.dockerfile
+      context: .
+      dockerfile: ./broker/zookeeper/zookeeper.dockerfile
     # volumes:
     #   - /path/to/zookeper/data:/opt/zookeeper-data
     networks:
@@ -44,8 +44,12 @@ services:
   kafka01:
     container_name: kafka01
     build: 
-      context: ./kafka
-      dockerfile: ./kafka.dockerfile
+      args: 
+        - SSL_KEYSTORE=./ssl/server.keystore.jks
+        - SSL_TRUSTSTORE=./ssl/server.truststore.jks
+        - SSL_CLIENTTRUSTSTORE=./ssl/client.truststore.jks
+      context: .
+      dockerfile: ./broker/kafka/kafka.dockerfile
     # volumes:
     #   - /path/to/kafka:/opt/kafka
     environment:

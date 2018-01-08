@@ -24,22 +24,10 @@ JAAS_FILE=/opt/kafka_server_jaas.conf
 
 export EXTRA_ARGS="-Djava.security.auth.login.config=${JAAS_FILE}"
 
-# GENERATE SSL ==========
+# SSL ==========
 SERVER_KEYSTORE_LOCATION=/opt/ssl/server.keystore.jks
 SERVER_TRUSTSTORE_LOCATION=/opt/ssl/server.truststore.jks
 CLIENT_TRUSTSTORE_LOCATION=/opt/ssl/client.truststore.jks
-CA_CERTFILE=/opt/ssl/ca-cert
-if [ ! -e "${SERVER_KEYSTORE_LOCATION}" ]; then
-  mkdir /opt/ssl
-  keytool -noprompt -keystore ${SERVER_KEYSTORE_LOCATION} -storepass ${SSL_STOREPASS} -keypass ${SSL_STOREPASS} -alias localhost -validity 3650 -keyalg RSA -genkey -ext "${SSL_KEYTOOL_SAN}" -dname "CN=localhost, OU=ID, O=example, L=example, S=example, C=GB"
-  openssl req -new -x509 -keyout ca-key -nodes -out ca-cert -days 3650 -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
-  keytool -noprompt -keystore ${SERVER_TRUSTSTORE_LOCATION} -alias CARoot -import -file ca-cert -storepass ${SSL_STOREPASS}
-  keytool -noprompt -keystore ${CLIENT_TRUSTSTORE_LOCATION} -alias CARoot -import -file ca-cert -storepass ${SSL_STOREPASS}
-  keytool -noprompt -keystore ${SERVER_KEYSTORE_LOCATION} -alias localhost -certreq -file cert-file -storepass ${SSL_STOREPASS}
-  openssl x509 -req -CA ca-cert -CAkey ca-key -in cert-file -out cert-signed -days 3650 -CAcreateserial -passin pass:${SSL_STOREPASS}
-  keytool -noprompt -keystore ${SERVER_KEYSTORE_LOCATION} -alias CARoot -import -file ca-cert -storepass ${SSL_STOREPASS}
-  keytool -noprompt -keystore ${SERVER_KEYSTORE_LOCATION} -alias localhost -import -file cert-signed -storepass ${SSL_STOREPASS}
-fi
 
 # SASL CONFIG
 if [ ! -e "${JAAS_FILE}" ]; then
@@ -78,10 +66,13 @@ auto.create.topics.enable=${AUTOCREATE_TOPICS:-true}
 ssl.client.auth=required
 ssl.keystore.location=$SERVER_KEYSTORE_LOCATION
 ssl.keystore.password=$SSL_STOREPASS
+ssl.key.password=$SSL_STOREPASS
 ssl.truststore.location=$SERVER_TRUSTSTORE_LOCATION
 ssl.truststore.password=$SSL_STOREPASS
 security.protocol=SSL
 ssl.secure.random.implementation=SHA1PRNG
+ssl.keystore.type = JKS
+ssl.truststore.type = JKS
 
 security.inter.broker.protocol=SASL_SSL
 sasl.mechanism.inter.broker.protocol=PLAIN

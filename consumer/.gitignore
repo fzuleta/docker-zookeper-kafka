@@ -1,0 +1,8 @@
+**/.idea/*
+/**/target/*
+/**/log/*
+/**/.tmp/*
+/**/.gradle/*
+/**/build/*
+/**/out/*
+/**/_dump/*
